@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  bd2:
+    image: bitnami/postgresql
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRESQL_USERNAME=bd
+      - POSTGRESQL_PASSWORD=bd
+      - POSTGRESQL_DATABASE=bd2
