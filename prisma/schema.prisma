@@ -1,18 +1,13 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
-generator client {
-  provider = "prisma-client-js"
-}
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Definição do modelo para funcionário
 model Funcionario {
   codigo            Int            @id @default(autoincrement())
   nome              String
@@ -26,8 +21,6 @@ model Funcionario {
   Projeto           Projeto[]
   funcionarioCodigo Int?
   Departamento      Departamento[]
-
-  @@map("funcionarios")
 }
 
 model Departamento {
@@ -41,6 +34,7 @@ model Departamento {
   funcionarioCodigo Int?
 }
 
+// Definição do modelo para projeto
 model Projeto {
   codigo         Int           @id @default(autoincrement())
   nome           String        @unique
@@ -54,6 +48,7 @@ model Projeto {
   Atividade      Atividade[]
 }
 
+// Definição do modelo para atividade
 model Atividade {
   codigo     Int      @id @default(autoincrement())
   descricao  String
