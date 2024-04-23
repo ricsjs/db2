@@ -1,0 +1,64 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Funcionario {
+  codigo            Int            @id @default(autoincrement())
+  nome              String
+  sexo              String
+  dtNasc            DateTime
+  salario           Float
+  supervisor        Funcionario?   @relation("Supervisor", fields: [supervisorId], references: [codigo], onDelete: SetNull, onUpdate: Cascade)
+  supervisorId      Int?
+  departamentoId    Int?
+  subordinados      Funcionario[]  @relation("Supervisor")
+  Projeto           Projeto[]
+  funcionarioCodigo Int?
+  Departamento      Departamento[]
+
+  @@map("funcionarios")
+}
+
+model Departamento {
+  codigo            Int          @id @default(autoincrement())
+  nome              String
+  sigla             String       @unique
+  descricao         String
+  gerenteId         Int?
+  Projeto           Projeto[]
+  Funcionario       Funcionario? @relation(fields: [funcionarioCodigo], references: [codigo])
+  funcionarioCodigo Int?
+}
+
+model Projeto {
+  codigo         Int           @id @default(autoincrement())
+  nome           String        @unique
+  descricao      String
+  responsavel    Funcionario?  @relation(fields: [responsavelId], references: [codigo], onDelete: SetNull, onUpdate: Cascade)
+  responsavelId  Int?
+  departamento   Departamento? @relation(fields: [departamentoId], references: [codigo], onDelete: SetNull, onUpdate: Cascade)
+  departamentoId Int?
+  dataInicio     DateTime
+  dataFim        DateTime
+  Atividade      Atividade[]
+}
+
+model Atividade {
+  codigo     Int      @id @default(autoincrement())
+  descricao  String
+  projeto    Projeto? @relation(fields: [projetoId], references: [codigo], onDelete: SetNull, onUpdate: Cascade)
+  projetoId  Int?
+  dataInicio DateTime
+  dataFim    DateTime
+}
